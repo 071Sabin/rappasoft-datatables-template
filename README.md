@@ -38,9 +38,9 @@ User model:
 App\Models\User
 
 To use a different model, simply replace:
-
+```php
 protected $model = User::class;
-
+```
 ---
 
 ## Theme System (Dark Mode)
@@ -48,12 +48,12 @@ protected $model = User::class;
 The dark theme is controlled using **public properties**, making it extremely easy to customize.
 
 ### Theme Variables
-
+```php
 public $color = 'stone';  
 public $thBg = 'bg-stone-900';  
 public $tableOddRowBg = 'bg-stone-700';  
 public $tableEvenRowBg = 'bg-stone-800';
-
+```
 ### What These Control
 
 - Table header background
@@ -91,9 +91,9 @@ The `configure()` method overrides **all default Rappasoft styles** and applies 
 - Conditional `td` styling override
 
 All default colors are disabled using:
-
+```php
 'default-colors' => false
-
+```
 ---
 
 ## Columns
@@ -127,11 +127,11 @@ The table defines the following columns:
 - Sortable
 
 ### Example Column Definition
-
+```php
 Column::make("Name", "name")
     ->sortable()
     ->searchable();
-
+```
 You can add or remove columns freely.
 
 ---
@@ -168,14 +168,14 @@ Allows deleting multiple users at once.
 - Clears selection after deletion
 
 ### Bulk Action Definition
-
+```php
 public function bulkActions(): array
 {
     return [
         'deleteSelected' => 'Delete Selected',
     ];
 }
-
+```
 ---
 
 ## Usage
@@ -191,9 +191,9 @@ Render the table in any Blade view:
 ### Change Theme Color
 
 Change:
-
+```php
 public $color = 'stone';
-
+```
 To:
 
 slate / zinc / neutral / gray / any Tailwind color
@@ -203,17 +203,17 @@ slate / zinc / neutral / gray / any Tailwind color
 ### Use Another Model
 
 Replace:
-
+```php
 protected $model = User::class;
-
+```
 With your own model.
 
 ---
 
 ### Add New Columns
-
+```php
 Add new `Column::make()` entries inside `columns()`.
-
+```
 ---
 
 ### Add More Filters
