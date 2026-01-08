@@ -1,69 +1,247 @@
-# Laravel Livewire Users DataTable (Dark Theme)
+# Users DataTable – Dark Theme (Laravel Livewire + Rappasoft)
 
-A customized **Rappasoft Laravel Livewire DataTable (v4)** built using the **User model**, featuring a fully adjustable **dark theme**.  
-All styling is controlled through simple color variables, allowing global theme changes with minimal effort.
+A reusable **dark-themed Users DataTable** built with **Laravel Livewire** and **Rappasoft Laravel Livewire Tables v4**.  
+This component is designed to be **copied, reused, and customized** by simply changing **colors, columns, or features**.
 
-📖 Official Rappasoft Documentation:  
-https://rappasoft.com/docs/laravel-livewire-tables/v4/introduction
-
----
-
-## Overview
-
-This Livewire DataTable implementation:
-
-- Uses the **User** Eloquent model
-- Comes with a **dark theme** applied across the table
-- Allows **easy color customization** via variables
-- Supports **searching, sorting, and pagination**
-- Is fully reusable and extendable
+Everything is contained inside **one Livewire component** and optimized for **Tailwind CSS dark mode**.
 
 ---
 
-## File Structure
-app/
-└── Livewire/
-└── UsersTable.php
+## Component Path
 
-
-All configuration, logic, and theme customization are handled inside `UsersTable.php`.
+app/  
+└── Livewire/  
+  └── UsersTable.php
 
 ---
 
-## Component Description
+## Purpose
 
-### UsersTable.php
+This DataTable provides a **production-ready dark UI** for displaying users with:
 
-The `UsersTable` Livewire component:
+- Centralized theme control
+- Search & sort support
+- Status filtering
+- Bulk delete actions
+- Pagination controls
+- Human-readable timestamps
+- Tailwind-based badge rendering
 
-- Extends Rappasoft’s Livewire Table base class
-- Fetches data from the **User model**
-- Defines searchable and sortable columns
-- Applies a consistent **dark UI theme**
-- Uses centralized color variables for styling
+You can **copy this file**, change color variables or column definitions, and reuse it for any model.
 
 ---
 
-## Dark Theme Customization
+## Model Used
 
-The table styling is driven by **color variables**, making it easy to adjust the entire UI from one place.
+User model:
 
-### Example Theme Variables
+App\Models\User
 
-```php
-protected string $headerBgColor = '#1F2937';
-protected string $rowBgColor    = '#111827';
-protected string $textColor     = '#FFFFFF';
-protected string $hoverBgColor  = '#374151';
-```
+To use a different model, simply replace:
 
-**Requirements**
-Laravel 8 or higher
-Livewire installed
-Rappasoft Laravel Livewire Tables v4
+protected $model = User::class;
 
-Learn More
+---
 
-For advanced usage such as filters, bulk actions, and performance optimizations, refer to the official documentation:
+## Theme System (Dark Mode)
 
+The dark theme is controlled using **public properties**, making it extremely easy to customize.
+
+### Theme Variables
+
+public $color = 'stone';  
+public $thBg = 'bg-stone-900';  
+public $tableOddRowBg = 'bg-stone-700';  
+public $tableEvenRowBg = 'bg-stone-800';
+
+### What These Control
+
+- Table header background
+- Odd and even row colors
+- Filter dropdown background
+- Search input styling
+- Bulk action menus
+- Pagination dropdown
+- Filter popover background
+
+To switch theme colors, just change `stone` to any Tailwind color  
+(e.g. `slate`, `zinc`, `neutral`, `gray`).
+
+---
+
+## Table Configuration
+
+The `configure()` method overrides **all default Rappasoft styles** and applies a consistent dark UI.
+
+### Configured Features
+
+- Primary key set to `id`
+- Pagination options: 10, 25, 50, 100
+- Custom search icon
+- Styled search input
+- Styled table wrapper
+- Styled headers (`th`)
+- Styled body (`tbody`)
+- Alternating row colors
+- Styled bulk action checkbox header
+- Styled bulk action button & menu
+- Styled column selector
+- Styled filter popover
+- Styled per-page dropdown
+- Conditional `td` styling override
+
+All default colors are disabled using:
+
+'default-colors' => false
+
+---
+
+## Columns
+
+The table defines the following columns:
+
+### ID
+- Sortable
+
+### Name
+- Searchable
+- Sortable
+
+### Email
+- Searchable
+- Sortable
+
+### Status
+- Rendered as HTML
+- Color-coded badges:
+  - Active → Green
+  - Inactive → Red
+  - Unknown → Muted text
+- Fully dark-mode compatible
+
+### Created At
+- Human-readable (`diffForHumans`)
+- Sortable
+
+### Updated At
+- Sortable
+
+### Example Column Definition
+
+Column::make("Name", "name")
+    ->sortable()
+    ->searchable();
+
+You can add or remove columns freely.
+
+---
+
+## Filters
+
+### Status Filter
+
+A dropdown filter for `user_status`:
+
+- All
+- Active
+- Inactive
+
+The filter:
+- Matches the dark theme
+- Applies the query only when a value is selected
+- Uses `SelectFilter`
+
+You can add more filters (number, date, text) easily.
+
+---
+
+## Bulk Actions
+
+### Delete Selected
+
+Allows deleting multiple users at once.
+
+### Behavior
+
+- Retrieves selected row IDs
+- Runs deletion inside a database transaction
+- Clears selection after deletion
+
+### Bulk Action Definition
+
+public function bulkActions(): array
+{
+    return [
+        'deleteSelected' => 'Delete Selected',
+    ];
+}
+
+---
+
+## Usage
+
+Render the table in any Blade view:
+
+<livewire:users-table />
+
+---
+
+## Customization Guide
+
+### Change Theme Color
+
+Change:
+
+public $color = 'stone';
+
+To:
+
+slate / zinc / neutral / gray / any Tailwind color
+
+---
+
+### Use Another Model
+
+Replace:
+
+protected $model = User::class;
+
+With your own model.
+
+---
+
+### Add New Columns
+
+Add new `Column::make()` entries inside `columns()`.
+
+---
+
+### Add More Filters
+
+Add additional filters inside `filters()` using:
+
+- SelectFilter
+- NumberFilter
+- DateFilter
+
+---
+
+### Add More Bulk Actions
+
+Define new methods and register them in `bulkActions()`.
+
+---
+
+## Requirements
+
+- Laravel 8+
+- Livewire
+- Rappasoft Laravel Livewire Tables v4
+- Tailwind CSS with dark mode enabled
+
+---
+
+## Reference
+
+Official Rappasoft Documentation:  
 https://rappasoft.com/docs/laravel-livewire-tables/v4/introduction
