@@ -9,7 +9,13 @@ export default {
 
         "./vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php",
         "./vendor/livewire/livewire/src/**/*.php",
+        "./vendor/rappasoft/laravel-livewire-tables/resources/views/*.blade.php",
         "./vendor/rappasoft/laravel-livewire-tables/resources/views/**/*.blade.php",
+        "./app/Livewire/*.php",
+        "./app/Livewire/**/*.php",
+    ],
+    purge: [
+        ..."./vendor/rappasoft/laravel-livewire-tables/resources/views/**/*.blade.php",
     ],
     theme: {
         extend: {

@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\User;
+use Rappasoft\LaravelLivewireTables\Views\Filters\DateFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\NumberFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
@@ -23,14 +24,17 @@ class UsersTable extends DataTableComponent
         $this->setPerPageAccepted([10, 25, 50, 100]);
         $this->setSearchIcon('heroicon-m-magnifying-glass');
 
-        $this->setSearchIconAttributes([
-            'style' => 'color: #D1D1D1',
+        $this->setSearchPlaceholder('Search users...');
+
+
+        $this->setSearchFieldAttributes([
+            'class' => 'border rounded-lg dark:' . $this->thBg,
         ]);
+
 
         $this->setComponentWrapperAttributes([
             'default' => true,
             'default-colors' => false,
-            'class' => 'p-3 rounded-md dark:' . $this->tableEvenRowBg,
         ]);
 
         $this->setTableWrapperAttributes([
@@ -66,10 +70,16 @@ class UsersTable extends DataTableComponent
             ];
         });
 
-        $this->setSearchFieldAttributes([
-            'default' => true,
-            'class' => ' px-2 border rounded-lg dark:' . $this->thBg,
-        ]);
+        $this->setTdAttributes(function (Column $column) {
+            if ($column->getTitle() == 'reorder') {
+                return [
+                    'class' => 'dark:' . $this->tableEvenRowBg,
+                    'default' => false,
+                    // 'default-colors' => false,
+                ];
+            }
+            return ['default' => true];
+        });
 
         $this->setBulkActionsThAttributes([
             'class' => 'dark:' . $this->thBg,
@@ -77,7 +87,7 @@ class UsersTable extends DataTableComponent
         ]);
 
         $this->setBulkActionsButtonAttributes([
-            'class' => 'border-none dark:' . $this->tableOddRowBg,
+            'class' => 'border dark:' . $this->tableOddRowBg,
             'default-colors' => true,
             'default-styling' => true,
         ]);
@@ -87,7 +97,7 @@ class UsersTable extends DataTableComponent
             'default-styling' => true,
         ]);
         $this->setColumnSelectButtonAttributes([
-            'class' => 'border-none dark:' . $this->tableOddRowBg,
+            'class' => 'border dark:' . $this->tableOddRowBg,
             'default-colors' => true,
             'default-styling' => true,
         ]);
@@ -102,25 +112,23 @@ class UsersTable extends DataTableComponent
 
 
 
-
         // this is the row per page drop down 10, 20, 30 50 etc... beside of clolumns menu
         $this->setPerPageFieldAttributes([
-            'class' => 'py-2 px-1 dark:' . $this->tableOddRowBg, // Add these classes to the dropdown
+            'class' => 'py-2 border px-1 dark:' . $this->tableOddRowBg, // Add these classes to the dropdown
             'default-styles' => true, // Output the default styling
         ]);
 
-        $this->setTdAttributes(function (Column $column) {
-            if ($column->getTitle() == 'reorder') {
-                return [
-                    'class' => 'dark:' . $this->tableEvenRowBg,
-                    'default' => false,
-                    // 'default-colors' => false,
-                ];
-            }
-            return ['default' => true];
-        });
+        $this->setBulkActionsThCheckboxAttributes([
+            'class' => 'rounded-md',
+            'default-colors' => true,
+            'default-styling' => true,
+        ]);
     }
 
+    public function deleteUser($id)
+    {
+        dd('delete user' . $id);
+    }
 
     public function columns(): array
     {
@@ -160,16 +168,23 @@ class UsersTable extends DataTableComponent
                 ->sortable(),
             Column::make("Updated at", "updated_at")
                 ->sortable(),
+            Column::make('Actions', 'id')
+                ->format(fn($value) => '<button class="px-2 py-1 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                wire:click="deleteUser(' . $value . ')">
+                                            Edit
+                                        </button>')
+                ->html(),
         ];
     }
+
+    // date filter doesn't work for now, there is no query created for  date filter for now.
     public function filters(): array
     {
         return [
             SelectFilter::make('Status', 'user_status')
                 ->setInputAttributes([
-                    'class' => 'p-1 dark:' . $this->tableEvenRowBg . ' dark:text-' . $this->color . '-200',
+                    'class' => 'px-1 shadow-none py-2 dark:' . $this->tableEvenRowBg . ' dark:text-' . $this->color . '-200',
                     'default-styling' => true,
-                    // 'default' => true,
                 ])
                 ->options([
                     '' => 'All',
@@ -182,6 +197,15 @@ class UsersTable extends DataTableComponent
                     }
                     $query->where('user_status', $value);
                 }),
+            DateFilter::make('Date')
+                ->config([
+                    'min' => '2020-02-01',
+                    'max' => '2026-12-31',
+                ])->setInputAttributes([
+                    'class' => 'px-1 py-2 dark:' . $this->tableEvenRowBg . ' dark:text-' . $this->color . '-200',
+                    'default-styling' => true,
+                    'default-color' => true,
+                ])
         ];
     }
 
